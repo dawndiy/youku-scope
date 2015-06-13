@@ -31,6 +31,36 @@ configure_file(
   @ONLY
   COPYONLY
 )
+configure_file(
+  "data/icon.png"
+  "${CMAKE_CURRENT_BINARY_DIR}/icon.png"
+  @ONLY
+  COPYONLY
+)
+configure_file(
+  "data/category.json"
+  "${CMAKE_CURRENT_BINARY_DIR}/category.json"
+  @ONLY
+  COPYONLY
+)
+configure_file(
+  "data/up.png"
+  "${CMAKE_CURRENT_BINARY_DIR}/up.png"
+  @ONLY
+  COPYONLY
+)
+configure_file(
+  "data/down.png"
+  "${CMAKE_CURRENT_BINARY_DIR}/down.png"
+  @ONLY
+  COPYONLY
+)
+configure_file(
+  "data/view.png"
+  "${CMAKE_CURRENT_BINARY_DIR}/view.png"
+  @ONLY
+  COPYONLY
+)
 
 # Install the scope images
 install(
@@ -38,6 +68,10 @@ install(
     "data/icon.png"
     "data/logo.png"
     "data/screenshot.png"
+    "data/up.png"
+    "data/down.png"
+    "data/view.png"
+    "data/category.json"
   DESTINATION
     ${SCOPE_INSTALL_DIR}
 )

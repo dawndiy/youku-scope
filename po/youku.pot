@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 19:23+0800\n"
+"POT-Creation-Date: 2015-06-14 00:10+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/data/youku.ini.in.h:1
@@ -25,7 +25,39 @@ msgstr ""
 msgid "This is a Youku scope"
 msgstr ""
 
-#. Register a category for the forecast
+#: ../src/data/youku-settings.ini.in.h:1
+msgid "首页TOP10类别"
+msgstr ""
+
+#: ../src/data/youku-settings.ini.in.h:2
+msgid "综艺;电视剧;电影;动漫;体育"
+msgstr ""
+
+#: ../src/data/youku-settings.ini.in.h:3
+msgid "搜索排序"
+msgstr ""
+
+#: ../src/data/youku-settings.ini.in.h:4
+msgid "相关度;发布时间;总播放数"
+msgstr ""
+
+#: ../src/data/youku-settings.ini.in.h:5
+msgid "搜索结果数目"
+msgstr ""
+
+#. create departments
 #: ../src/query.cpp:147
-msgid "7 day forecast"
+msgid "首页"
+msgstr ""
+
+#: ../src/query.cpp:148
+msgid "视频"
+msgstr ""
+
+#: ../src/query.cpp:149
+msgid "节目"
+msgstr ""
+
+#: ../src/query.cpp:625 ../src/query.cpp:665
+msgid "搜索结果"
 msgstr ""

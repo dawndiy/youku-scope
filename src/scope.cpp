@@ -30,14 +30,15 @@ void Scope::stop() {
 
 sc::SearchQueryBase::UPtr Scope::search(const sc::CannedQuery &query,
                                         const sc::SearchMetadata &metadata) {
+    const string scopePath = scope_directory();
     // Boilerplate construction of Query
-    return sc::SearchQueryBase::UPtr(new Query(query, metadata, config_));
+    return sc::SearchQueryBase::UPtr(new Query(query, metadata, scopePath, config_));
 }
 
 sc::PreviewQueryBase::UPtr Scope::preview(sc::Result const& result,
                                           sc::ActionMetadata const& metadata) {
     // Boilerplate construction of Preview
-    return sc::PreviewQueryBase::UPtr(new Preview(result, metadata));
+    return sc::PreviewQueryBase::UPtr(new Preview(result, metadata, config_));
 }
 
 #define EXPORT __attribute__ ((visibility ("default")))

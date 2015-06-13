@@ -1,11 +1,15 @@
 [ScopeConfig]
 _DisplayName=Youku Scope
+DisplayName[zh_CN]=优酷视频
 _Description=This is a Youku scope
+Description[zh_CN]=优酷视频,提供视频分类排行,视频搜索
 Art=screenshot.png
-Author=Firstname Lastname
+Author=DawnDIY
 Icon=icon.png
-Keywords=weather
+Keywords=video;videos;music;news;gaming;kids;educational;finance;humor;lifestyle;movies;science;shopping;sports;travel;tv;comics
 
 [Appearance]
 PageHeader.Logo=logo.png
-
+PageHeader.Background=gradient:///#FF06A7E1/#003399E0
+PageHeader.DividerColor=#88FF0000
+PageHeader.ForegroundColor=#EE2786DA

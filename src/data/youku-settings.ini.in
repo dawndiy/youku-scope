@@ -2,19 +2,20 @@
 # settings by calling settings() from the Query::run() method.
 # E.g. auto location = settings().at("location").get_string();
 
-#[location]
-#type = string
-#defaultValue = London,uk
-#_displayName = Default Location
+[indextop]
+type = list
+defaultValue = 1
+_displayName = 首页TOP10类别
+_displayValues = 综艺;电视剧;电影;动漫;体育
 
-#[units]
-#type = list
-#_displayName = Temperature Units
-#_displayValues = Metric;Imperial
-#defaultValue = 0
+[orderby]
+type = list
+defaultValue = 0
+_displayName = 搜索排序
+_displayValues = 相关度;发布时间;总播放数
 
-#[forecast]
-#type = boolean
-#defaultValue = true
-#_displayName = Show Forecast
+[resultcount]
+type = number
+_displayName = 搜索结果数目
+defaultValue = 50
 

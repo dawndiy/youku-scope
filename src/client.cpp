@@ -5,6 +5,7 @@
 #include <core/net/http/content_type.h>
 #include <core/net/http/response.h>
 #include <QVariantMap>
+#include <QDebug>
 
 namespace http = core::net::http;
 namespace net = core::net;
@@ -57,93 +58,183 @@ void Client::get(const net::Uri::Path &path,
     }
 }
 
-Client::Current Client::weather(const string& query) {
-    // This is the method that we will call from the Query class.
-    // It connects to an HTTP source and returns the results.
-
+Client::VideoList Client::getVideosByCategory(const string &category,
+                                              const string &keyword,
+                                              const string &period,
+                                              const string &orderby,
+                                              const string &count) {
 
     // In this case we are going to retrieve JSON data.
     QJsonDocument root;
 
-    // Build a URI and get the contents.
-    // The fist parameter forms the path part of the URI.
-    // The second parameter forms the CGI parameters.
-    get(
-    { "data", "2.5", "weather" },
-    { { "q", query }, { "units", "metric" }
-                },
-                root);
-    // e.g. http://api.openweathermap.org/data/2.5/weather?q=QUERY&units=metric
-
-    Current result;
-
-    // Read out the city we found
-    QVariantMap variant = root.toVariant().toMap();
-    QVariantMap sys = variant["sys"].toMap();
-    result.city.id = sys["id"].toUInt();
-    result.city.name = variant["name"].toString().toStdString();
-    result.city.country = sys["country"].toString().toStdString();
-
-    // Read the weather
-    QVariantMap weather = variant["weather"].toList().first().toMap();
-    result.weather.id = weather["id"].toUInt();
-    result.weather.main = weather["main"].toString().toStdString();
-    result.weather.description = weather["description"].toString().toStdString();
-    result.weather.icon = "http://openweathermap.org/img/w/"
-            + weather["icon"].toString().toStdString() + ".png";
-
-    // Read the temps
-    QVariantMap main = variant["main"].toMap();
-    result.weather.temp.cur = main["temp"].toDouble();
-    result.weather.temp.max = main["temp_max"].toDouble();
-    result.weather.temp.min = main["temp_min"].toDouble();
-    return result;
-}
-
-Client::Forecast Client::forecast_daily(const string& query, unsigned int cnt) {
-    QJsonDocument root;
-
-    // Build a URI and get the contents
-    // The fist parameter forms the path part of the URI.
-    // The second parameter forms the CGI parameters.
-    get( { "data", "2.5", "forecast", "daily" }, { { "q", query }, { "units",
-                                                                     "metric" }, { "cnt", to_string(cnt) }
-         }, root);
-    // e.g. http://api.openweathermap.org/data/2.5/forecast/daily/?q=QUERY&units=metric&cnt=7
-
-    Forecast result;
-
-    QVariantMap variant = root.toVariant().toMap();
-
-    // Read out the city we found
-    QVariantMap city = variant["city"].toMap();
-    result.city.id = city["id"].toUInt();
-    result.city.name = city["name"].toString().toStdString();
-    result.city.country = city["country"].toString().toStdString();
-
-    // Iterate through the weather data
-    for (const QVariant &i : variant["list"].toList()) {
-        QVariantMap item = i.toMap();
-
-        // Extract the first weather item
-        QVariantList weather_list = item["weather"].toList();
-        QVariantMap weather = weather_list.first().toMap();
-
-        // Extract the temperature data
-        QVariantMap temp = item["temp"].toMap();
-
-        // Add a result to the weather list
-        result.weather.emplace_back(
-                    Weather { weather["id"].toUInt(), weather["main"].toString().toStdString(),
-                              weather["description"].toString().toStdString(),
-                              "http://openweathermap.org/img/w/"
-                              + weather["icon"].toString().toStdString() + ".png", Temp {
-                                  temp["max"].toDouble(), temp["min"].toDouble(),
-                                  0.0 } });
+    if (keyword.empty()) {
+        // 没有关键字，使用 根据分类获取视频 接口
+        get(
+            { "v2", "videos", "by_category.json" },
+            { { "client_id", config_->client_id }, {"category", category}, {"period", period}, {"count", count} },
+            root);
+        // e.g. https://openapi.youku.com/v2/videos/by_category.json?client_id=e38f2f239754dc06
+    } else {
+        // 有关键字，使用 搜索视频通过关键词 接口
+        get(
+            { "v2", "searches", "video", "by_keyword.json" },
+            { { "client_id", config_->client_id }, { "keyword", keyword }, {"category", category}, {"period", period}, {"orderby", orderby}, {"count", count} },
+            root);
+        // e.g. https://openapi.youku.com/v2/searches/video/by_keyword.json?client_id=e38f2f239754dc06
     }
 
-    return result;
+
+    VideoList videoList;
+
+    // 读取视频 Json
+    QVariantMap variant = root.toVariant().toMap();
+    for (const QVariant &i : variant["videos"].toList()) {
+        QVariantMap item = i.toMap();
+
+        videoList.emplace_back(
+            Video {
+                item["id"].toString().toStdString(),
+                item["title"].toString().toStdString(),
+                item["link"].toString().toStdString(),
+                item["thumbnail"].toString().toStdString(),
+                item["description"].toString().toStdString(),
+                item["view_count"].toString().toStdString(),
+                item["up_count"].toString().toStdString(),
+                item["down_count"].toString().toStdString(),
+                item["published"].toString().toStdString()
+            }
+        );
+    }
+
+    return videoList;
 }
+
+Client::ShowList Client::getShowsByCategory(const string &category, const string &keyword, const string &period, const string &count) {
+
+    // In this case we are going to retrieve JSON data.
+    QJsonDocument root;
+
+
+    if (keyword.empty()) {
+        get(
+            { "v2", "shows", "by_category.json" },
+            { { "client_id", config_->client_id }, {"category", category}, {"period", period}, {"count", count} },
+            root);
+        // e.g. https://openapi.youku.com/v2/videos/by_category.json?client_id=e38f2f239754dc06
+    } else {
+        get(
+            { "v2", "searches", "show", "by_keyword.json" },
+            { { "client_id", "e38f2f239754dc06" }, {"keyword", keyword}, {"category", category}, {"period", period}, {"count", count} },
+            root);
+        // e.g. https://openapi.youku.com/v2/searches/show/by_keyword.json?client_id=e38f2f239754dc06
+    }
+
+    ShowList showList;
+
+    // Json
+    QVariantMap variant = root.toVariant().toMap();
+    for (const QVariant &i : variant["shows"].toList()) {
+        QVariantMap item = i.toMap();
+
+        showList.emplace_back(
+            Show {
+                item["id"].toString().toStdString(),
+                item["name"].toString().toStdString(),
+                item["link"].toString().toStdString(),
+                item["thumbnail"].toString().toStdString(),
+                item["episode_updated"].toString().toStdString(),
+                item["view_count"].toString().toStdString(),
+                item["score"].toString().toStdString(),
+                item["published"].toString().toStdString()
+            }
+        );
+    }
+
+    return showList;
+}
+
+// 视频详情
+Client::VideoDetail Client::getVideoDetailById(const string &video_id) {
+
+    QJsonDocument root;
+
+    get(
+        { "v2", "videos", "show.json" },
+        {{ "client_id", config_->client_id }, {"video_id", video_id}},
+        root);
+
+    Client::VideoDetail vDetail;
+    QVariantMap variant = root.toVariant().toMap();
+
+    qDebug() << "[视频详情]" << variant["id"].toString() << variant["title"].toString();
+
+    vDetail = VideoDetail {
+        variant["id"].toString().toStdString(),
+        variant["title"].toString().toStdString(),
+        variant["link"].toString().toStdString(),
+        variant["thumbnail"].toString().toStdString(),
+        variant["bigThumbnail"].toString().toStdString(),
+        (int)variant["duration"].toDouble(),
+        variant["category"].toString().toStdString(),
+        variant["published"].toString().toStdString(),
+        variant["description"].toString().toStdString(),
+        variant["player"].toString().toStdString(),
+        variant["tags"].toString().toStdString(),
+        variant["view_count"].toString().toInt(),
+        variant["favorite_count"].toString().toInt(),
+        variant["comment_count"].toString().toInt(),
+        variant["up_count"].toString().toInt(),
+        variant["down_count"].toString().toInt(),
+    };
+
+    return vDetail;
+}
+
+// 节目详情
+Client::ShowDetail Client::getShowDetailById(const string &show_id) {
+    QJsonDocument root;
+
+    get(
+        { "v2", "shows", "show.json" },
+        {{ "client_id", config_->client_id }, {"show_id", show_id}},
+        root);
+
+    Client::ShowDetail sDetail;
+
+    QVariantMap variant = root.toVariant().toMap();
+
+    qDebug() << "[节目详情]" << variant["id"].toString() << variant["title"].toString();
+
+    sDetail = ShowDetail {
+        variant["id"].toString().toStdString(),
+        variant["name"].toString().toStdString(),
+        variant["alias"].toString().toStdString(),
+        variant["link"].toString().toStdString(),
+        variant["play_link"].toString().toStdString(),
+        variant["poster"].toString().toStdString(),
+        variant["poster_large"].toString().toStdString(),
+        variant["thumbnail"].toString().toStdString(),
+        variant["genre"].toString().toStdString(),
+        variant["area"].toString().toStdString(),
+        variant["episode_count"].toString().toInt(),
+        variant["episode_updated"].toString().toInt(),
+        variant["view_count"].toInt(),
+        variant["score"].toFloat(),
+        variant["released"].toString().toStdString(),
+        variant["category"].toString().toStdString(),
+        variant["description"].toString().toStdString(),
+        variant["rank"].toString().toInt(),
+        variant["view_yesterday_count"].toString().toInt(),
+        variant["view_week_count"].toString().toInt(),
+        variant["comment_count"].toString().toInt(),
+        variant["favorite_count"].toString().toInt(),
+        variant["up_count"].toString().toInt(),
+        variant["down_count"].toString().toInt(),
+    };
+
+    return sDetail;
+}
+
 
 http::Request::Progress::Next Client::progress_report(
         const http::Request::Progress&) {

@@ -26,75 +26,140 @@ public:
         typedef std::shared_ptr<Config> Ptr;
 
         // The root of all API request URLs
-        std::string apiroot { "http://api.openweathermap.org" };
+        std::string apiroot { "https://openapi.youku.com" };
 
         // The custom HTTP user agent string for this library
         std::string user_agent { "example-network-scope 0.1; (foo)" };
+
+        // YouKu App Info
+        std::string client_id {"7260506159958ac8"};
+        std::string client_secret {"0637808b218fa55046aed63c6ef8dae1"};
     };
 
     /**
-     * Information about a City
+     * 视频基础信息
      */
-    struct City {
-        unsigned int id;
-        std::string name;
-        std::string country;
+    struct Video {
+       std::string id;
+       std::string title;
+       std::string link;
+       std::string thumbnail;
+       std::string description;
+       std::string view_count;
+       std::string up_count;
+       std::string down_count;
+       std::string published;
     };
 
     /**
-     * Temperature information for a day.
+     * 视频详细信息
      */
-    struct Temp {
-        double max;
-        double min;
-        double cur;
-    };
-
-    /**
-     * Weather information for a day.
-     */
-    struct Weather {
-        unsigned int id;
-        std::string main;
+    struct VideoDetail {
+        std::string id;
+        std::string title;
+        std::string link;
+        std::string thumbnail;
+        std::string bigThumbnail;
+        int duration;
+        std::string category;
+        std::string published;
         std::string description;
-        std::string icon;
-        Temp temp;
+        std::string player;
+        std::string tags;
+        int view_count;
+        int favorite_count;
+        int comment_count;
+        int up_count;
+        int down_count;
+    };
+
+    typedef std::deque<Video> VideoList;
+
+    /**
+     * 根据分类获取视频
+     */
+    virtual VideoList getVideosByCategory(
+            const std::string &category="",
+            const std::string &keyword="",
+            const std::string &period="today",
+            const std::string &orderby="relevance",
+            const std::string &count="50");
+
+    /**
+     * 根据视频ID获取视频详细信息
+     */
+    virtual VideoDetail getVideoDetailById(const std::string &video_id);
+
+    /**
+     * 视频分类信息
+     */
+    struct Category {
+        std::string term;
+        std::string label;
+        std::string lang;
+    };
+
+    typedef std::deque<Category> CategoryList;
+
+    /**
+     * 节目基础信息
+     */
+    struct Show {
+        std::string id;
+        std::string name;
+        std::string link;
+        std::string thumbnail;
+        std::string episode_updated;
+        std::string view_count;
+        std::string score;
+        std::string published;
     };
 
     /**
-     * A list of weather information
+     * 节目详细信息
      */
-    typedef std::deque<Weather> WeatherList;
-
-    /**
-     * Weather information about the current day
-     */
-    struct Current {
-        City city;
-        Weather weather;
+    struct ShowDetail {
+        std::string id;
+        std::string name;
+        std::string alias;
+        std::string link;
+        std::string play_link;          // 允许为空
+        std::string poster;             // 允许为空
+        std::string poster_large;       // 允许为空
+        std::string thumbnail;
+        std::string genre;
+        std::string area;
+        int episode_count;
+        int episode_updated;            // 允许为空
+        int view_count;
+        float score;
+        std::string released;
+        std::string category;
+        std::string description;
+        int rank;
+        int view_yesterday_count;
+        int view_week_count;
+        int comment_count;
+        int favorite_count;
+        int up_count;
+        int down_count;
     };
 
+    typedef std::deque<Show> ShowList;
+
     /**
-     * Forecast information about a city
+     * 根据粉来获取节目
      */
-    struct Forecast {
-        City city;
-        WeatherList weather;
-    };
+    virtual ShowList getShowsByCategory(const std::string &category="电视剧", const std::string &keyword="", const std::string &period="today", const std::string &count="50");
+
+    /**
+     * 根据节目ID获取节目详细信息
+     */
+    virtual ShowDetail getShowDetailById(const std::string &show_id);
 
     Client(Config::Ptr config);
 
     virtual ~Client() = default;
-
-    /**
-     * Get the current weather for the specified location
-     */
-    virtual Current weather(const std::string &query);
-
-    /**
-     * Get the weather forecast for the specified location and duration
-     */
-    virtual Forecast forecast_daily(const std::string &query, unsigned int days = 7);
 
     /**
      * Cancel any pending queries (this method can be called from a different thread)
