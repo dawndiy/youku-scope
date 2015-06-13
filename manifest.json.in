@@ -1,0 +1,16 @@
+{
+  "description": "A simple Unity scope that accesses the network",
+  "maintainer": "DawnDIY <chenglu1990@gmail.com>",
+  "architecture": "@CLICK_ARCH@",
+  "name": "youku.ubuntu-dawndiy",
+  "title": "youku",
+  "framework" : "ubuntu-sdk-15.04",
+  "hooks": {
+    "youku": {
+      "scope": "youku",
+      "apparmor": "youku.apparmor"
+    }
+  }
+}
+
+
