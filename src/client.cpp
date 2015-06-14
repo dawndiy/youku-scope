@@ -203,7 +203,7 @@ Client::ShowDetail Client::getShowDetailById(const string &show_id) {
 
     QVariantMap variant = root.toVariant().toMap();
 
-    qDebug() << "[节目详情]" << variant["id"].toString() << variant["title"].toString();
+    qDebug() << "[节目详情]" << variant["id"].toString() << variant["name"].toString();
 
     sDetail = ShowDetail {
         variant["id"].toString().toStdString(),
