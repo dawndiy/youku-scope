@@ -859,7 +859,6 @@ std::string Query::formatCount(std::string count) {
 
 Client::CategoryList Query::getCategorise(const string &type) {
 
-    qDebug() << QString::fromStdString(this->scopePath) << "***";
     QFile file(QString::fromStdString(this->scopePath + "/category.json"));
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     QJsonDocument root = QJsonDocument::fromJson(file.readAll());
