@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-14 15:04+0800\n"
+"POT-Creation-Date: 2015-10-24 03:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,18 +46,18 @@ msgid "搜索结果数目"
 msgstr ""
 
 #. create departments
-#: ../src/query.cpp:147
+#: ../src/query.cpp:162
 msgid "首页"
 msgstr ""
 
-#: ../src/query.cpp:148
+#: ../src/query.cpp:163
 msgid "视频"
 msgstr ""
 
-#: ../src/query.cpp:149
+#: ../src/query.cpp:164
 msgid "节目"
 msgstr ""
 
-#: ../src/query.cpp:625 ../src/query.cpp:665
+#: ../src/query.cpp:666 ../src/query.cpp:706
 msgid "搜索结果"
 msgstr ""

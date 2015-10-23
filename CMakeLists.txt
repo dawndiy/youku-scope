@@ -50,10 +50,14 @@ set(SCOPE_INSTALL_DIR "/youku")
 set(GETTEXT_PACKAGE "youku")
 set(PACKAGE_NAME "youku.ubuntu-dawndiy")
 set(SCOPE_NAME "${PACKAGE_NAME}_youku")
+set(SCOPE_INSTALL_NAME "${PACKAGE_NAME}_youku")
+set(SCOPE_ACCOUNTS_NAME "${PACKAGE_NAME}_account-plugin")
 
 # If we need to refer to the scope's name or package in code, these definitions will help
 add_definitions(-DPACKAGE_NAME="${PACKAGE_NAME}")
 add_definitions(-DSCOPE_NAME="${SCOPE_NAME}")
+add_definitions(-DSCOPE_INSTALL_NAME="${SCOPE_INSTALL_NAME}")
+add_definitions(-DSCOPE_ACCOUNTS_NAME="${SCOPE_ACCOUNTS_NAME}")
 add_definitions(-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}")
 
 # This command figures out the target architecture and puts it into the manifest file
@@ -68,6 +72,17 @@ configure_file(manifest.json.in ${CMAKE_CURRENT_BINARY_DIR}/manifest.json)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/manifest.json DESTINATION "/")
 install(FILES "youku.apparmor" DESTINATION "/")
 
+# Configure and install account files
+configure_file(youku.application.in ${CMAKE_CURRENT_BINARY_DIR}/youku.application)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/youku.application DESTINATION "/")
+configure_file(youku.service.in ${CMAKE_CURRENT_BINARY_DIR}/youku.service)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/youku.service DESTINATION "/")
+configure_file(youku.provider.in ${CMAKE_CURRENT_BINARY_DIR}/youku.provider)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/youku.provider DESTINATION "/")
+install(FILES "account-plugin.apparmor" DESTINATION "/")
+install(DIRECTORY "qml-plugin" DESTINATION "/")
+
+
 # Make these files show up in QtCreator
 file(GLOB_RECURSE
   _PO_FILES
@@ -78,6 +93,11 @@ add_custom_target(hidden_files
   SOURCES
     manifest.json.in
     youku.apparmor
+    youku.service.in
+    youku.provider.in
+    youku.application.in
+    account-plugin.apparmor
+    qml-plugin/Main.qml
     src/data/youku.ini.in
     src/data/youku-settings.ini.in
     po/POTFILES.in

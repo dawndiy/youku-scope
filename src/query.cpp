@@ -6,6 +6,7 @@
 #include <unity/scopes/CategoryRenderer.h>
 #include <unity/scopes/QueryBase.h>
 #include <unity/scopes/SearchReply.h>
+#include <unity/scopes/OnlineAccountClient.h>
 
 #include <iomanip>
 #include <ctime>
@@ -40,7 +41,7 @@ const static string VIDEO_CAROUSEL = R"({
         "art" : {
             "field": "art",
             "fill-mode": "fit",
-            "aspect-ratio": 0.98
+            "aspect-ratio": 1.1
         },
         "emblem": "source_log",
         "attributes": "attributes"
@@ -102,6 +103,19 @@ const static string AGG_SCOPE = R"({
     }
 })";
 
+const static string LOGIN = R"({
+    "schema-version": 1,
+    "template": {
+        "category-layout": "vertical-journal",
+        "card-size": "large",
+        "card-background": "color:///#06A7E1"
+    },
+    "components": {
+        "title": "title",
+        "background": "background"
+    }
+})";
+
 Query::Query(const sc::CannedQuery &query,
              const sc::SearchMetadata &metadata,
              const std::string scopePath,
@@ -118,6 +132,7 @@ void Query::cancelled() {
 
 
 void Query::run(sc::SearchReplyProxy const& reply) {
+
     initScope();
 
     try {
@@ -166,6 +181,32 @@ void Query::run(sc::SearchReplyProxy const& reply) {
         reply->register_departments(all_depts);
 
         // qDebug() << deptIdMap;
+
+        // =====================================
+        // Check account
+        // =====================================
+        unity::scopes::OnlineAccountClient oa_client(SCOPE_NAME, "sharing", SCOPE_ACCOUNTS_NAME);
+        bool service_authenticated = false;
+        qDebug() << oa_client.get_service_statuses().size();
+        for (auto const& status : oa_client.get_service_statuses()) {
+            // qDebug() << QString::fromStdString(status.client_id);
+            // qDebug() << QString::fromStdString(status.error);
+            if (status.service_authenticated) {
+                service_authenticated = true;
+                break;
+            }
+        }
+        if (!service_authenticated) {
+            sc::CategoryRenderer rdLogin(LOGIN);
+            auto cat = reply->register_category("youku_login", "", "", rdLogin);
+            unity::scopes::CategorisedResult res(cat);
+            res.set_title("Log-in to YouKu");
+            oa_client.register_account_login_item(res,
+                                                  query(),
+                                                  unity::scopes::OnlineAccountClient::InvalidateResults,
+                                                  unity::scopes::OnlineAccountClient::DoNothing);
+            reply->push(res);
+        }
 
 
         // Start by getting information about the query

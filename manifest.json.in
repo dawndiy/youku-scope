@@ -5,7 +5,14 @@
     "hooks": {
         "youku": {
             "apparmor": "youku.apparmor",
-            "scope": "youku"
+            "scope": "youku",
+            "account-application": "youku.application",
+            "account-service": "youku.service"
+        },
+        "account-plugin": {
+            "apparmor": "account-plugin.apparmor",
+            "account-provider": "youku.provider",
+            "account-qml-plugin": "qml-plugin"
         }
     },
     "maintainer": "DawnDIY <chenglu1990@gmail.com>",
