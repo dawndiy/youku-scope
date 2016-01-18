@@ -12,8 +12,8 @@
 #include <QJsonDocument>
 
 /**
+ * @brief The Client class
  * Provide a nice way to access the HTTP API.
- *
  * We don't want our scope's code to be mixed together with HTTP and JSON handling.
  */
 class Client {
@@ -37,7 +37,8 @@ public:
     };
 
     /**
-     * 视频基础信息
+     * @brief The Video struct
+     * Video Basic Info
      */
     struct Video {
        std::string id;
@@ -52,7 +53,8 @@ public:
     };
 
     /**
-     * 视频详细信息
+     * @brief The VideoDetail struct
+     * Video Detail Info
      */
     struct VideoDetail {
         std::string id;
@@ -73,10 +75,19 @@ public:
         int down_count;
     };
 
+    /**
+     * @brief VideoList
+     */
     typedef std::deque<Video> VideoList;
 
     /**
-     * 根据分类获取视频
+     * @brief Get basic video infos by category
+     * @param category
+     * @param keyword
+     * @param period
+     * @param orderby
+     * @param count
+     * @return VideoList
      */
     virtual VideoList getVideosByCategory(
             const std::string &category="",
@@ -86,12 +97,14 @@ public:
             const std::string &count="50");
 
     /**
-     * 根据视频ID获取视频详细信息
+     * @brief Get video detail info by video id
+     * @param video_id
+     * @return VideoDetail
      */
     virtual VideoDetail getVideoDetailById(const std::string &video_id);
 
     /**
-     * 视频分类信息
+     * @brief The Category struct
      */
     struct Category {
         std::string term;
@@ -99,10 +112,14 @@ public:
         std::string lang;
     };
 
+    /**
+     * @brief CategoryList
+     */
     typedef std::deque<Category> CategoryList;
 
     /**
-     * 节目基础信息
+     * @brief The Show struct
+     * Show Basic Info
      */
     struct Show {
         std::string id;
@@ -116,7 +133,8 @@ public:
     };
 
     /**
-     * 节目详细信息
+     * @brief The ShowDetail struct
+     * Show Detail Info
      */
     struct ShowDetail {
         std::string id;
@@ -145,24 +163,36 @@ public:
         int down_count;
     };
 
+    /**
+     * @brief ShowList
+     */
     typedef std::deque<Show> ShowList;
 
     /**
-     * 根据粉来获取节目
+     * @brief getShowsByCategory
+     * Get shows by category
+     * @param category
+     * @param keyword
+     * @param period
+     * @param count
+     * @return ShowList
      */
     virtual ShowList getShowsByCategory(const std::string &category="电视剧", const std::string &keyword="", const std::string &period="today", const std::string &count="50");
 
     /**
-     * 根据节目ID获取节目详细信息
+     * @brief Get show detail info by ID
+     * @param show_id
+     * @return ShowDetail
      */
     virtual ShowDetail getShowDetailById(const std::string &show_id);
+
 
     Client(Config::Ptr config);
 
     virtual ~Client() = default;
 
     /**
-     * Cancel any pending queries (this method can be called from a different thread)
+     * @brief Cancel any pending queries (this method can be called from a different thread)
      */
     virtual void cancel();
 
@@ -173,18 +203,18 @@ protected:
              const core::net::Uri::QueryParameters &parameters,
              QJsonDocument &root);
     /**
-     * Progress callback that allows the query to cancel pending HTTP requests.
+     * @brief Progress callback that allows the query to cancel pending HTTP requests.
      */
     core::net::http::Request::Progress::Next progress_report(
             const core::net::http::Request::Progress& progress);
 
     /**
-     * Hang onto the configuration information
+     * @brief Hang onto the configuration information
      */
     Config::Ptr config_;
 
     /**
-     * Thread-safe cancelled flag
+     * @brief Thread-safe cancelled flag
      */
     std::atomic<bool> cancelled_;
 };

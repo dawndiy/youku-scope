@@ -68,14 +68,14 @@ Client::VideoList Client::getVideosByCategory(const string &category,
     QJsonDocument root;
 
     if (keyword.empty()) {
-        // 没有关键字，使用 根据分类获取视频 接口
+        // If there have no keyword, use 'videos/by_category.json' interface
         get(
             { "v2", "videos", "by_category.json" },
             { { "client_id", config_->client_id }, {"category", category}, {"period", period}, {"count", count} },
             root);
         // e.g. https://openapi.youku.com/v2/videos/by_category.json?client_id=e38f2f239754dc06
     } else {
-        // 有关键字，使用 搜索视频通过关键词 接口
+        // If there have keyword, use 'searches/video/by_keyword.json' interface
         get(
             { "v2", "searches", "video", "by_keyword.json" },
             { { "client_id", config_->client_id }, { "keyword", keyword }, {"category", category}, {"period", period}, {"orderby", orderby}, {"count", count} },
