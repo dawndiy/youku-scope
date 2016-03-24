@@ -1,0 +1,9 @@
+{
+    "template": "ubuntu-account-plugin",
+    "policy_groups": [
+        "accounts",
+        "networking",
+        "webview"
+    ],
+    "policy_version": 1.3
+}

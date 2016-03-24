@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service>
+    <type>sharing</type>
+    <name>Youku Scope</name>
+    <icon>youku/icon.png</icon>
+    <provider>youku.ubuntu-dawndiy_account-plugin</provider>
+</service>

@@ -1,0 +1,22 @@
+{
+    "title": "Youku Scope",
+    "name": "youku.ubuntu-dawndiy",
+    "description": "Youku Video Scope",
+    "architecture": "armhf",
+    "hooks": {
+        "youku": {
+            "scope": "youku",
+            "apparmor": "apparmor.json",
+            "account-application": "youku.application",
+            "account-service": "youku.service"
+        },
+        "account-plugin": {
+            "apparmor": "account-plugin-apparmor.json",
+            "account-provider": "youku.provider",
+            "account-qml-plugin": "qml-plugin"
+        }
+    },
+    "version": "0.5",
+    "maintainer": "DawnDIY <chenglu1990@gmail.com>",
+    "framework" : "ubuntu-sdk-15.04.1"
+}
