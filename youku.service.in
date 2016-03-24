@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<service>
-    <type>sharing</type>
-    <name>Youku Scope</name>
-    <icon>logo.png</icon>
-    <provider>@SCOPE_ACCOUNTS_NAME@</provider>
-</service>
