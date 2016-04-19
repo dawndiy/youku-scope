@@ -16,7 +16,7 @@
             "account-qml-plugin": "qml-plugin"
         }
     },
-    "version": "0.5",
+    "version": "0.5.1",
     "maintainer": "DawnDIY <chenglu1990@gmail.com>",
-    "framework" : "ubuntu-sdk-15.04.1"
+    "framework" : "ubuntu-sdk-15.04"
 }

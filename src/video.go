@@ -10,21 +10,21 @@ import (
 
 // Video information from Youku
 type Video struct {
-	ID            string  `json:"id"`
-	Title         string  `json:"title"`
-	Link          string  `json:"link"`
-	Thumbnail     string  `json:"thumbnail"`
-	BigThumbnail  string  `json:"bigThumbnail"`
-	Duration      float64 `json:"duration"`
-	Category      string  `json:"category"`
-	State         string  `json:"state"`
-	ViewCount     int     `json:"view_count"`
-	FavoriteCount int     `json:"favorite_count"`
-	CommentCount  int     `json:"comment_count"`
-	UpCount       int     `json:"up_count"`
-	DownCount     int     `json:"down_count"`
-	Published     string  `json:"published"`
-	FavoriteTime  string  `json:"favorite_time"`
+	ID            string      `json:"id"`
+	Title         string      `json:"title"`
+	Link          string      `json:"link"`
+	Thumbnail     string      `json:"thumbnail"`
+	BigThumbnail  string      `json:"bigThumbnail"`
+	Duration      float64     `json:"duration"`
+	Category      string      `json:"category"`
+	State         string      `json:"state"`
+	ViewCount     interface{} `json:"view_count"`
+	FavoriteCount interface{} `json:"favorite_count"`
+	CommentCount  interface{} `json:"comment_count"`
+	UpCount       interface{} `json:"up_count"`
+	DownCount     interface{} `json:"down_count"`
+	Published     string      `json:"published"`
+	FavoriteTime  string      `json:"favorite_time"`
 }
 
 // VideoDetail to save detail information of video

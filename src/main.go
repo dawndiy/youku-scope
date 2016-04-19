@@ -390,9 +390,9 @@ func (sc *YoukuScope) showHome(query *scopes.CannedQuery, metadata *scopes.Searc
 		result.SetTitle(showFirst.Name)
 		result.SetArt(showFirst.Thumbnail)
 		result.SetURI(showFirst.Link)
-		result.Set("subtitle", fmt.Sprintf("更新 %d", showFirst.EpisodeUpdated))
+		result.Set("subtitle", fmt.Sprintf("更新 %s", fmt.Sprint(showFirst.EpisodeUpdated)))
 		result.Set("attributes", []map[string]string{
-			{"value": fmt.Sprintf("★%.2f", showFirst.Score)},
+			{"value": fmt.Sprintf("★%.2f", formatScore(showFirst.Score))},
 			{"value": fmt.Sprintf("🔥%s", formatCount(showFirst.ViewCount))},
 		})
 		result.Set("show_id", showFirst.ID)
@@ -645,7 +645,7 @@ func (sc *YoukuScope) viewShow(result *scopes.Result, reply *scopes.PreviewReply
 	// Header
 	header := scopes.NewPreviewWidget("header", "header")
 	header.AddAttributeValue("title", show.Name)
-	header.AddAttributeValue("subtitle", fmt.Sprintf("评分: %.1f", show.Score))
+	header.AddAttributeValue("subtitle", fmt.Sprintf("评分: %.1f", formatScore(show.Score)))
 
 	// Show
 	showWidget := scopes.NewPreviewWidget("show", "video")
@@ -868,9 +868,9 @@ func (sc *YoukuScope) showForAggregatedScopes(query *scopes.CannedQuery, metadat
 			result.SetTitle(show.Name)
 			result.SetArt(show.Thumbnail)
 			result.SetURI(show.Link)
-			result.Set("subtitle", fmt.Sprintf("更新 %d", show.EpisodeUpdated))
+			result.Set("subtitle", fmt.Sprintf("更新 %s", fmt.Sprint(show.EpisodeUpdated)))
 			result.Set("attributes", []map[string]string{
-				{"value": fmt.Sprintf("★%.2f", show.Score)},
+				{"value": fmt.Sprintf("★%.2f", formatScore(show.Score))},
 				{"value": fmt.Sprintf("🔥%s", formatCount(show.ViewCount))},
 			})
 			result.Set("show_id", show.ID)
@@ -936,9 +936,9 @@ func pushData(data interface{}, category *scopes.Category, reply *scopes.SearchR
 			result.SetTitle(show.Name)
 			result.SetArt(show.Thumbnail)
 			result.SetURI(show.Link)
-			result.Set("subtitle", fmt.Sprintf("更新 %d", show.EpisodeUpdated))
+			result.Set("subtitle", fmt.Sprintf("更新 %s", fmt.Sprint(show.EpisodeUpdated)))
 			result.Set("attributes", []map[string]string{
-				{"value": fmt.Sprintf("★%.2f", show.Score)},
+				{"value": fmt.Sprintf("★%.2f", formatScore(show.Score))},
 				{"value": fmt.Sprintf("🔥%s", formatCount(show.ViewCount))},
 			})
 			result.Set("show_id", show.ID)
@@ -953,9 +953,10 @@ func pushData(data interface{}, category *scopes.Category, reply *scopes.SearchR
 
 }
 
-func formatCount(count int) string {
+func formatCount(c interface{}) string {
 
 	var text string
+	count, _ := strconv.Atoi(fmt.Sprint(c))
 
 	switch {
 	case count <= 9999:
@@ -991,6 +992,11 @@ func formatDuration(data interface{}) string {
 	}
 
 	return durationString
+}
+
+func formatScore(s interface{}) float64 {
+	f, _ := strconv.ParseFloat(fmt.Sprint(s), 64)
+	return f
 }
 
 func isContainsKey(key string, keys []string) bool {
